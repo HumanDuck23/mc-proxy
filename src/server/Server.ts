@@ -119,8 +119,14 @@ export class Server extends EventEmitter {
             const response = {
               version: { name: version.name, protocol: version.protocol },
               players: { max: this.options.maxPlayers ?? 1, online: 0 },
-              description: { text: this.options.motd ?? "A Minecraft Server" }
+              description: { text: this.options.motd ?? "A Minecraft Server" },
+              favicon: this.options.favicon
             }
+
+            if (!this.options.favicon) {
+              delete response.favicon
+            }
+
             serializer.write({
               name: "server_info",
               params: { response: JSON.stringify(response) }
