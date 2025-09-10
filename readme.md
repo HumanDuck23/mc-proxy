@@ -6,6 +6,10 @@ The proxy, in theory, can handle any game version which [node-minecraft-protocol
 supports. This only breaks when logic changes occur (such as the configuration state introduced in 1.20.2),
 these will need to be manually implemented. As of now, it supports **1.7 - 1.21.8**.
 
+The library works independently of node-minecraft-protocols client and server implementations,
+as it is specifically designed to proxy packets rather than implement game features.
+Authentication, encryption and compression are implemented. NMP is used only for packet reading and writing.
+
 ## Installation
 
 ```
@@ -39,3 +43,18 @@ server.on("outgoing", (client, remoteClient, packet, cb) => {
 
 server.start()
 ```
+
+**NOTE:** In order for proxying to work, you **must** call the callback method `cb` in the event handlers.
+The value you pass to it determines whether the packet is passed through (`true`) or dropped (`false`).
+This is where you should place all your own listeners and logic.
+
+## Licensing and Attributions
+
+`mc-proxy` depends on several open-source libraries:
+
+- `minecraft-data`
+- `prismarine-auth`
+- `minecraft-protocol`
+- `uuid`
+- `yggdrasil`
+- `consola`
