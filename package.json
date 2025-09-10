@@ -1,9 +1,11 @@
 {
   "name": "mc-proxy",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
+  "description": "Library to proxy Minecraft connections via a localhost server. Allows packet deletion / insertion / manipulation.",
   "type": "module",
+  "main": "dist/index.js",
+  "module": "./dist/index.js",
+  "types": "./dist/index.d.ts",
   "scripts": {
     "build": "tsc",
     "dev": "npm run build && node dist/index.js"
