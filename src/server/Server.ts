@@ -325,12 +325,16 @@ export class Server extends EventEmitter {
               })
 
               remoteClient.on("packet", (msg: any) => {
-                serializer.write(msg.data)
+                this.emit("incoming", socket, remoteClient, msg, (pass: boolean) => {
+                  if (!pass) return
+                  serializer.write(msg.data)
+                })
               })
 
               remoteClient.on("disconnect", (reason: any) => {
                 serializer.write(reason.data)
                 socket.destroy()
+                this.emit("disconnect", reason)
               })
 
               remoteClient.connect()
@@ -348,7 +352,10 @@ export class Server extends EventEmitter {
               remoteClient.write(packet.data)
               remoteClient.setState(mc.states.CONFIGURATION)
             } else {
-              remoteClient.write(packet.data)
+              this.emit("outgoing", socket, remoteClient, packet, (pass: boolean) => {
+                if (!pass) return
+                remoteClient!.write(packet.data)
+              })
             }
           }
           break
