@@ -1,0 +1,7 @@
+{
+  "name": "basic_proxy",
+  "type": "module",
+  "dependencies": {
+    "mc-proxy": "file:../.."
+  }
+}
