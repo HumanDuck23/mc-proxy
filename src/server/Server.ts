@@ -7,6 +7,8 @@ import * as net from "node:net"
 import { makeMinecraftCodecs } from "../codec/makeMinecraftCodecs.js"
 import { FramingDecoder } from "../codec/FramingDecoder.js"
 import { FramingEncoder } from "../codec/FramingEncoder.js"
+import { AesDecoder } from "../codec/AesDecoder.js"
+import { AesEncoder } from "../codec/AesEncoder.js"
 
 export type ServerOptions = {
   port?: number
@@ -48,10 +50,13 @@ export class Server extends EventEmitter {
     const framingDecoder = new FramingDecoder()
     const framingEncoder = new FramingEncoder()
 
+    const aesDec = new AesDecoder()
+    const aesEnc = new AesEncoder()
+
     let { serializer, deserializer } = makeMinecraftCodecs(state, version.name, true)
 
-    socket.pipe(framingDecoder)
-    framingEncoder.pipe(socket)
+    socket.pipe(aesDec).pipe(framingDecoder)
+    framingEncoder.pipe(aesEnc).pipe(socket)
 
     framingDecoder.pipe(deserializer)
     serializer.pipe(framingEncoder)
