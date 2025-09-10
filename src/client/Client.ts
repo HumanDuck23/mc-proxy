@@ -1,8 +1,8 @@
 import { Authflow, MinecraftJavaCertificates } from "prismarine-auth"
 import { EventEmitter } from "node:events"
+import minecraftData from "minecraft-data"
 import * as crypto from "node:crypto"
 import mc from "minecraft-protocol"
-import minecraftData from "minecraft-data"
 import { consola } from "consola"
 import * as net from "node:net"
 
@@ -112,6 +112,20 @@ export class Client extends EventEmitter {
       })
   }
 
+  write(packet: any) {
+    if (this.serializer) {
+      this.serializer.write(packet)
+    } else {
+      consola.warn("Cannot write packet, serializer not initialized.")
+    }
+  }
+
+  disconnect() {
+    this.client.end()
+    this.client.destroy()
+    this.cleanup()
+  }
+
   private cleanup() {
     try {
       this.framingDecoder.unpipe(this.deserializer as any)
@@ -137,7 +151,7 @@ export class Client extends EventEmitter {
     this.deserializer = null
   }
 
-  private setState(next: mc.States) {
+  setState(next: mc.States) {
     if (this.state === next && this.serializer && this.deserializer) return
     consola.debug(`Client switching state to ${next}.`)
 
@@ -177,7 +191,13 @@ export class Client extends EventEmitter {
       return
     }
 
-    console.log(packet)
+    if (packet.data.name === "disconnect" || packet.data.name === "kick_disconnect") {
+      const reason = packet.data.params.reason
+      consola.warn(`Disconnected: `, reason)
+      this.client.destroy()
+      this.emit("disconnect", packet)
+      return
+    }
 
     switch (this.state) {
       case mc.states.LOGIN: {
@@ -208,6 +228,10 @@ export class Client extends EventEmitter {
 
           this.emit("login")
         }
+        break
+      }
+      default: {
+        this.emit("packet", packet)
         break
       }
     }

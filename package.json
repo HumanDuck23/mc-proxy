@@ -15,10 +15,12 @@
   "private": true,
   "dependencies": {
     "@types/node": "^24.3.1",
+    "@types/uuid": "^10.0.0",
     "consola": "^3.4.2",
     "minecraft-data": "^3.98.0",
     "minecraft-protocol": "^1.62.0",
     "prismarine-auth": "^2.7.0",
+    "uuid": "^13.0.0",
     "yggdrasil": "^1.7.0"
   }
 }
