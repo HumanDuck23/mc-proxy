@@ -6,7 +6,12 @@
   "main": "dist/index.js",
   "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "workspaces": ["examples/*"],
+  "workspaces": [
+    "examples/*"
+  ],
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build": "tsc",
     "dev": "npm run build && node dist/index.js"
@@ -25,5 +30,11 @@
     "prismarine-auth": "^2.7.0",
     "uuid": "^13.0.0",
     "yggdrasil": "^1.7.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/HumanDuck23/mc-proxy.git"
+  },
+  "author": "HumanDuck23",
+  "license": "MIT"
 }
